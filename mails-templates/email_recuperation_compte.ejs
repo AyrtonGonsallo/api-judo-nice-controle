@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Récupération de mot de passe</title>
+    <style>
+        @font-face {
+            font-family: 'Sarpanch-Regular';
+            src: url('/Sarpanch-Regular.ttf') format('truetype');
+        }
+        .center{text-align: center;}
+        .desc p{margin-top: 0px; margin-bottom: 0px;}
+        body {
+            font-family: "Montserrat";
+            background-color: #F4F4F4;
+            margin: 0;
+            padding: 0;
+        }
+        .content{font-size: 15px;}
+        .body-cnt{
+            padding-top: 20px;
+            padding-bottom: 20px;
+            background: #F4F4F4;
+            width: 100%;
+        }
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 0px;
+            padding: 15px;
+            overflow: hidden;
+        }
+        .header {
+            position: relative;
+            /*background: url('https://homeren.fr/icons/bg-footer.png');
+            background-position: bottom center;
+            background-repeat: no-repeat;
+            background-size: cover;*/
+            width:auto;
+            height:100%;
+            font-family: 'Sarpanch-Regular' !important;
+            align-items: center !important;
+            padding: 20px;
+            text-align: center !important;
+            max-width: 100%;
+            margin: auto;
+        }
+        .footer a {
+            color: #FFC637;
+            text-decoration: underline;
+        }
+        .footer a:hover {
+            color: #555555;
+        }
+        /*.header img {
+            width: 130px;
+            height: auto;
+            text-align: end;
+            float: right;
+            padding: 10px;
+        }
+        .content {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        .header div p{ 
+            text-align: left;
+            color: white;
+            margin-top: 0px; margin-bottom: 0px;
+            font-family: 'Montserrat' !important;
+        }
+
+        h1 {
+            font-family: 'Montserrat' !important;
+            text-align: left;
+            margin-top: 0px;
+            margin-bottom: 2px;
+            width: 100%;
+            color: #ffc735;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+        }
+        table th {
+            color: #555;
+            font-size: 14px;
+            border-bottom: 2px solid #ffc735;
+        }
+        .footer {
+            /*background: url('https://homeren.fr/icons/bg-2-ftr.png');
+            background-position: top center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            width:auto;
+            height:100%;
+            background-color: #555;
+            display: flex;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 0px;
+        }
+        .footer p{margin-bottom: 0px;}
+        .col-ftr{width:33%;float:left;}
+        .footer a {
+            margin: 0 10px;
+            color: white;
+            text-decoration: none;
+        }
+        .footer img {
+            width: fit-content;
+            height: 24px;
+            margin: 0 5px;
+        }
+        table{background-color: #fbfbfb;}
+        table tr td {
+            padding: 10px;
+         }
+ 
+         tr:nth-child(even) {
+    background-color: #f0f0f0 !important;
+}
+
+ tr:nth-child(odd) {
+    background-color: #ffffff !important; }
+        #triangle-code{
+ height : 0;
+ width : 0;
+ margin: 0 auto;
+    display: block;
+    border-top: 29px solid #555555;
+    border-right: 181px solid transparent;
+    border-left: 181px solid transparent;
+}
+#triangle-code2{
+ margin: 0 auto;
+ display: block;
+ height : 0;
+ width : 0;
+ border-right : 181px solid transparent;
+ border-bottom : 29px solid #555;
+ border-left : 181px solid transparent;
+}  */
+    </style>
+</head>
+<body>
+    <div class="body-cnt">
+        <div class="container">
+            <!-- Header -->
+            <div class="header">
+                <div>
+                    <div>
+                    
+                    </div>
+                    <div class="center">
+                        <img src="https://admin.oj-nice.nash-project.name/static/images/logo_white.png" width="300px"   alt="Logo du site">  
+                    </div>
+                </div>       
+            </div>
+            <!--<div id="triangle-code"></div>-->
+
+            <!-- Main Content -->
+            <div class="content">
+                <p>Bonjour <%= user.nom %> <%= user.prenom %>,
+                <br><br>
+                <span class="desc">
+                    Votre mot de passe sur l'application de l'OJ Nice vient d'être recréé. Voici le lien pour télécharger l'application et l'installer sur votre téléphone : <a href="https://drive.google.com/file/d/1z1NMkGEXyDisP21aVqhHhrzWd5Cyw8It/view?usp=drive_link" target="_blank">appli-OJN.apk</a>. 
+                    <br>
+                    Étape 1 : télécharger l'application<br>
+                    Étape 2 : ouvrir le dossier "téléchargements" de votre téléphone<br>
+                    Étape 3 : cliquez sur le fichier "appli-OJN.apk"<br>
+                    Étape 4 : identifiez-vous avec vos accès personnels : <%= user.email %> / <%= newPassword %><br>
+                </span><br>
+                <p>En cas de difficulté, contactez Olivier Fondriest.</p><br>
+                <p>La direction de l'OJNice.</p>
+
+            </div>
+            
+
+            <!-- Footer 
+            <div class="footer">
+                <div style="border:1px solid #E6E6E6 ;"></div>
+                <p class="center" style="font-size: 11px;">
+                    Ce message a été envoyé automatiquement à  <a href="mailto:<%= user.Email %>"><%= user.Email %></a> dans le cadre de votre inscription au service HomeRen
+                    <br>
+
+                    <strong>Une question ?</strong>  
+                    <br>
+
+                    Contactez votre Conseiller HomeRen au <a href="tel:02 00 00 00 00">02 00 00 00 00</a>  
+                    Nos horaires sont <a href="#"  style="text-decoration: underline;">consultables ici</a>.
+                </p>
+                <div style="border:1px solid #E6E6E6 ;"></div>
+                <p class="center" style="font-size: 10px;">
+                    HomeRen traite vos données pour vous proposer un service de mise en relation avec des professionnels du bâtiment. Consultez la rubrique <a href="#" > Vos données et vos droits</a> sur notre site web pour en savoir plus.
+                    <br>
+                    Conformément aux dispositions de la loi « Informatique et Libertés » et du règlement général sur la protection des données du 27 avril 2016, vous disposez d'un droit d'accès, de rectification et de suppression de vos données personnelles. Consulter nos <a href="#">informations légales.</a>
+                </p>
+            </div>
+            -->
+        </div>
+    </div>
+</body>
+</html>
