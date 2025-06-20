@@ -14,6 +14,10 @@ db.sequelize = sequelize;
 // Importer les modèles
 db.Utilisateur = require('./models/utilisateur.model')(sequelize, DataTypes);
 db.Role = require('./models/role.model')(sequelize, DataTypes);
+db.Cours = require('./models/cours.model')(sequelize, DataTypes);
+db.Dojo = require('./models/dojo.model')(sequelize, DataTypes);
+db.CoursProf  = require('./models/CoursProf.model')(sequelize, DataTypes);
+
 
 // Associer les relations
 Object.keys(db).forEach(model => {

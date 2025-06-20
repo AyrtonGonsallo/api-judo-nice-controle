@@ -27,6 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         field: 'roleId'
+        },
+        dojoId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        field: 'dojoId'
         }
     }, 
     {
@@ -40,7 +45,15 @@ module.exports = (sequelize, DataTypes) => {
 
   Utilisateur.associate = (models) => {
     Utilisateur.belongsTo(models.Role, { foreignKey: 'roleId' });
+    Utilisateur.belongsTo(models.Dojo, { foreignKey: 'dojoId' });
+    Utilisateur.belongsToMany(models.Cours, {
+    through: 'CoursProf',
+    foreignKey: 'utilisateurId',
+    otherKey: 'coursId'
+  });
   };
+
+
 
   return Utilisateur;
 };

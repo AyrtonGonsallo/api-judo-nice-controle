@@ -173,7 +173,7 @@ router.post('/recuperer_utilisateur', async (req, res) => {
     const user = await Utilisateur.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(404).json({ message: "Aucun utilisateur trouvé avec cet email" });
+      return res.status(404).json({ message: `L'email ${email} ne figure pas dans la liste des utilisateurs de l'application. Veuillez contacter Olivier Fondriest.` });
     }
 
     const newPassword = generateRandomPassword(10);
@@ -210,7 +210,7 @@ router.post('/recuperer_utilisateur', async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: 'Email envoyé avec succès' });
+    res.status(200).json({ message: `Votre mot de passe vient de vous être envoyé à l'adresse e-mail ${email}` });
 
   } catch (err) {
     console.error("Erreur serveur:", err);
@@ -267,6 +267,24 @@ router.put('/edit_user/:id', async (req, res) => {
 router.get('/utilisateurs', async (req, res) => {
   try {
     const utilisateurs = await Utilisateur.findAll({
+      include: {
+        model: Role,
+        attributes: ['id', 'titre']
+      },
+      attributes: ['id', 'prenom', 'nom', 'email']
+    });
+    res.json(utilisateurs);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des utilisateurs :', error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
+
+
+router.get('/get_professeurs', async (req, res) => {
+  try {
+    const utilisateurs = await Utilisateur.findAll({
+      where: { roleId: 2 },  // 🎯 filtre ici
       include: {
         model: Role,
         attributes: ['id', 'titre']
