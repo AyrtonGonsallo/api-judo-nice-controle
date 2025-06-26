@@ -174,12 +174,15 @@
                 <p>Bonjour <%= user.nom %> <%= user.prenom %>,
                 <br><br>
                 <span class="desc">
-                    Votre mot de passe sur l'application de l'OJ Nice vient d'être recréé. Voici le lien pour télécharger l'application et l'installer sur votre téléphone : <a href="https://drive.google.com/file/d/1z1NMkGEXyDisP21aVqhHhrzWd5Cyw8It/view?usp=drive_link" target="_blank">appli-OJN.apk</a>. 
+                    Suite à votre demande, un nouveau mot de passe a été créé. Voici vos identifiants :<br>
+                    <%= user.email %><br>
+                    <%= newPassword %><br><br>
+                    Pour rappel, voici le lien pour télécharger l'application : <a href="https://drive.google.com/file/d/1z1NMkGEXyDisP21aVqhHhrzWd5Cyw8It/view?usp=drive_link" target="_blank">appli-OJN.apk</a>. 
                     <br>
                     Étape 1 : télécharger l'application<br>
                     Étape 2 : ouvrir le dossier "téléchargements" de votre téléphone<br>
                     Étape 3 : cliquez sur le fichier "appli-OJN.apk"<br>
-                    Étape 4 : identifiez-vous avec vos accès personnels : <%= user.email %> / <%= newPassword %><br>
+                    
                 </span><br>
                 <p>En cas de difficulté, contactez Olivier Fondriest.</p><br>
                 <p>La direction de l'OJNice.</p>

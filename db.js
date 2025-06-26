@@ -17,6 +17,9 @@ db.Role = require('./models/role.model')(sequelize, DataTypes);
 db.Cours = require('./models/cours.model')(sequelize, DataTypes);
 db.Dojo = require('./models/dojo.model')(sequelize, DataTypes);
 db.CoursProf  = require('./models/CoursProf.model')(sequelize, DataTypes);
+db.Adherent  = require('./models/adherent.model')(sequelize, DataTypes);
+db.Appel  = require('./models/appel.model')(sequelize, DataTypes);
+db.CoursAdherent  = require('./models/CoursAdherent.model')(sequelize, DataTypes);
 
 
 // Associer les relations

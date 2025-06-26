@@ -6,6 +6,7 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 const Utilisateur = db.Utilisateur;
 const Role = db.Role;
+const Dojo = db.Dojo;
 const crypto = require('crypto');
 const ejs = require('ejs');
 const path = require('path');
@@ -83,8 +84,8 @@ router.get('/init', async (req, res) => {
 // --- POST: Ajouter un utilisateur ---
 router.post('/add_user', async (req, res) => {
   try {
-    const { nom, prenom, email, password, roleId } = req.body;
-    if (!nom || !prenom || !email || !password || !roleId) {
+    const { nom, prenom, email, password, roleId,dojoId } = req.body;
+    if (!nom || !prenom || !email || !password || !roleId || !dojoId) {
       return res.status(400).json({ message: 'Tous les champs sont requis' });
     }
 
@@ -103,7 +104,8 @@ router.post('/add_user', async (req, res) => {
       prenom,
       email,
       password: hash,
-      roleId
+      roleId,
+      dojoId
     });
 
 
@@ -240,7 +242,7 @@ router.delete('/delete_user/:id', async (req, res) => {
 router.put('/edit_user/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const { nom, prenom, email, roleId } = req.body;
+    const { nom, prenom, email, roleId,dojoId } = req.body;
 
     const user = await Utilisateur.findByPk(id);
     if (!user) {
@@ -252,7 +254,7 @@ router.put('/edit_user/:id', async (req, res) => {
     if (prenom) user.prenom = prenom;
     if (email) user.email = email;
     if (roleId) user.roleId = roleId;
-    
+    if (dojoId) user.dojoId = dojoId;
 
     await user.save();
 
@@ -281,22 +283,6 @@ router.get('/utilisateurs', async (req, res) => {
 });
 
 
-router.get('/get_professeurs', async (req, res) => {
-  try {
-    const utilisateurs = await Utilisateur.findAll({
-      where: { roleId: 2 },  // 🎯 filtre ici
-      include: {
-        model: Role,
-        attributes: ['id', 'titre']
-      },
-      attributes: ['id', 'prenom', 'nom', 'email']
-    });
-    res.json(utilisateurs);
-  } catch (error) {
-    console.error('Erreur lors de la récupération des utilisateurs :', error);
-    res.status(500).json({ message: 'Erreur serveur' });
-  }
-});
 
 // Route GET pour récupérer un utilisateur par id avec son rôle
 router.get('/get_user/:id', async (req, res) => {
@@ -305,11 +291,10 @@ router.get('/get_user/:id', async (req, res) => {
   try {
     const utilisateur = await Utilisateur.findOne({
       where: { id: userId },
-      include: {
-        model: Role,
-        attributes: ['id', 'titre']
-      },
-      attributes: ['id', 'prenom', 'nom', 'email']
+      include: [
+        { model: Role },
+        { model: Dojo }
+      ],
     });
 
     if (!utilisateur) {

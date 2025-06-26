@@ -3,7 +3,9 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./db');
 const authRoutes = require('./routes/auth.routes');
-const dojocoursRoutes = require('./routes/dojo_cours.routes');
+const dojos_coursRoutes = require('./routes/dojo_cours.routes');
+const professeursRoutes = require('./routes/professeurs.routes');
+const adherents_appelsRoutes = require('./routes/adherent_appel.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,7 +22,9 @@ app.get('/', (req, res) => {
 });
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/dojo_cours', dojocoursRoutes);
+app.use('/api/dojo_cours', dojos_coursRoutes);
+app.use('/api/professeurs', professeursRoutes);
+app.use('/api/adherents', adherents_appelsRoutes);
 
 // Connexion à la base et sync
 db.sequelize.sync().then(() => {

@@ -37,11 +37,17 @@ module.exports = (sequelize, DataTypes) => {
 
   Cours.associate = (models) => {
     Cours.belongsTo(models.Dojo, { foreignKey: 'dojoId' });
+    Cours.hasMany(models.Appel, { foreignKey: 'coursId' });
     Cours.belongsToMany(models.Utilisateur, {
     through: 'CoursProf',
     foreignKey: 'coursId',
     otherKey: 'utilisateurId'
   });
+  Cours.belongsToMany(models.Adherent, {
+  through: 'CoursAdherent',
+  foreignKey: 'coursId',
+  otherKey: 'adherentId'
+});
   };
 
  
