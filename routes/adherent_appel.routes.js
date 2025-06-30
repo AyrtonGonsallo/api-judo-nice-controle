@@ -6,6 +6,8 @@ const Utilisateur = db.Utilisateur;
 const Cours = db.Cours;
 const Adherent = db.Adherent;
 const Appel = db.Appel;
+const { Op } = require('sequelize');
+
 
 const { Sequelize,  } = require('sequelize');
 
@@ -194,6 +196,63 @@ router.get('/adherents_by_cours/:coursId', async (req, res) => {
 });
 
 
+router.get('/adherents_by_cours_with_appels/:coursId', async (req, res) => {
+  const { coursId } = req.params;
+  const today = new Date().toISOString().split('T')[0]; // format 'YYYY-MM-DD'
+
+  try {
+    const cours = await Cours.findByPk(coursId, {
+      include: [
+        {
+          model: Adherent,
+          through: { attributes: [] },
+          include: [
+            {
+              model: Dojo,
+              attributes: ['id', 'nom'],
+            }
+          ]
+        }
+      ],
+    });
+
+    if (!cours) {
+      return res.status(404).json({ message: 'Cours non trouvé.' });
+    }
+
+    const adherents = cours.Adherents;
+
+    // Pour tous les adherents, récupérer leurs appels du jour pour ce cours
+    const appels = await Appel.findAll({
+      where: {
+        coursId: coursId,
+        date: today,
+        adherentId: {
+          [Op.in]: adherents.map(a => a.id),
+        },
+      }
+    });
+
+    // Créer une map des appels pour y accéder facilement
+    const appelMap = {};
+    appels.forEach(appel => {
+      appelMap[appel.adherentId] = appel;
+    });
+
+    // Fusionner chaque adherent avec son appel
+    const result = adherents.map(adherent => ({
+      adherent,
+      appel: appelMap[adherent.id] || null,
+    }));
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des adhérents et appels :', error);
+    res.status(500).json({ message: 'Erreur serveur', error: error.message });
+  }
+});
+
+
 router.post('/add_appel', async (req, res) => {
   const { status, date, adherentId, coursId } = req.body;
 
@@ -226,6 +285,51 @@ router.post('/add_appel', async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur.', error: error.message });
   }
 });
+
+router.post('/upsert_appel', async (req, res) => {
+  const { status, adherentId, coursId } = req.body;
+
+  if (typeof status === 'undefined' || !adherentId || !coursId) {
+    console.log(status, adherentId, coursId)
+    return res.status(400).json({ message: 'Données incomplètes (status, adherentId, coursId requis).' });
+  }
+
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+  try {
+    // Rechercher un appel existant pour ce jour
+    const existingAppel = await Appel.findOne({
+      where: { adherentId, coursId, date: today },
+    });
+
+    let appel;
+
+    if (existingAppel) {
+      // Modifier le status
+      existingAppel.status = status;
+      await existingAppel.save();
+      appel = existingAppel;
+    } else {
+      // Créer un nouvel appel
+      appel = await Appel.create({
+        status,
+        adherentId,
+        coursId,
+        date: today,
+      });
+    }
+
+    res.status(200).json({
+      message: existingAppel ? 'Appel mis à jour.' : 'Appel créé.',
+      appel
+    });
+
+  } catch (error) {
+    console.error('Erreur upsert appel :', error);
+    res.status(500).json({ message: 'Erreur serveur.', error: error.message });
+  }
+});
+
 
 router.get('/get_appels', async (req, res) => {
   try {

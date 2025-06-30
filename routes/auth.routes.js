@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const Utilisateur = db.Utilisateur;
 const Role = db.Role;
 const Dojo = db.Dojo;
+const Cours = db.Cours;
 const crypto = require('crypto');
 const ejs = require('ejs');
 const path = require('path');
@@ -294,6 +295,32 @@ router.get('/get_user/:id', async (req, res) => {
       include: [
         { model: Role },
         { model: Dojo }
+      ],
+    });
+
+    if (!utilisateur) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    res.json(utilisateur);
+  } catch (error) {
+    console.error('Erreur lors de la récupération de l\'utilisateur :', error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
+
+
+// Route GET pour récupérer un utilisateur par id avec son rôle
+router.get('/get_all_teacher_datas/:id', async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const utilisateur = await Utilisateur.findOne({
+      where: { id: userId,roleId: 2, },
+      include: [
+        { model: Role },
+        { model: Dojo },
+        { model: Cours }
       ],
     });
 
