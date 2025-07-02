@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         field: 'dojoId'
+        },
+        jour_num: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        field: 'jour_num'
         }
     }, 
     {

@@ -195,10 +195,9 @@ router.get('/adherents_by_cours/:coursId', async (req, res) => {
   }
 });
 
-
 router.get('/adherents_by_cours_with_appels/:coursId', async (req, res) => {
   const { coursId } = req.params;
-  const today = new Date().toISOString().split('T')[0]; // format 'YYYY-MM-DD'
+  const today = new Date().toISOString().split('T')[0]; // format YYYY-MM-DD
 
   try {
     const cours = await Cours.findByPk(coursId, {
@@ -222,8 +221,8 @@ router.get('/adherents_by_cours_with_appels/:coursId', async (req, res) => {
 
     const adherents = cours.Adherents;
 
-    // Pour tous les adherents, récupérer leurs appels du jour pour ce cours
-    const appels = await Appel.findAll({
+    // Récupération des appels existants pour la date d'aujourd'hui
+    const appelsExistants = await Appel.findAll({
       where: {
         coursId: coursId,
         date: today,
@@ -233,24 +232,41 @@ router.get('/adherents_by_cours_with_appels/:coursId', async (req, res) => {
       }
     });
 
-    // Créer une map des appels pour y accéder facilement
+    // Création d'une map pour les appels existants
     const appelMap = {};
-    appels.forEach(appel => {
+    appelsExistants.forEach(appel => {
       appelMap[appel.adherentId] = appel;
     });
 
-    // Fusionner chaque adherent avec son appel
+    const appelsManquants = [];
+
+    for (const adherent of adherents) {
+      if (!appelMap[adherent.id]) {
+        // Créer un appel absent si inexistant
+        const nouvelAppel = await Appel.create({
+          date: today,
+          status: false,
+          coursId: coursId,
+
+          adherentId: adherent.id
+        });
+        appelMap[adherent.id] = nouvelAppel;
+      }
+    }
+
+    // Reconstituer la réponse
     const result = adherents.map(adherent => ({
       adherent,
-      appel: appelMap[adherent.id] || null,
+      appel: appelMap[adherent.id],
     }));
 
     res.status(200).json(result);
   } catch (error) {
-    console.error('Erreur lors de la récupération des adhérents et appels :', error);
+    console.error('Erreur lors de la récupération/création des appels :', error);
     res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 });
+
 
 
 router.post('/add_appel', async (req, res) => {

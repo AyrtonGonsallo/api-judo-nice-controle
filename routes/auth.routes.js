@@ -320,8 +320,11 @@ router.get('/get_all_teacher_datas/:id', async (req, res) => {
       include: [
         { model: Role },
         { model: Dojo },
-        { model: Cours }
+        { model: Cours,
+          include: [{ model: Dojo }],
+        }
       ],
+       order: [[{ model: Cours }, 'jour_num', 'ASC'], [{ model: Cours }, 'heure', 'ASC']]
     });
 
     if (!utilisateur) {

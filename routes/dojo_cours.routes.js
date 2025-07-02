@@ -167,14 +167,15 @@ router.get('/get_cours/:id', async (req, res) => {
 //  add_cours – ajouter un nouveau cours
 // POST /api/dojo_cours/add_cours
 router.post('/add_cours', async (req, res) => {
-  const { jour, heure, dojoId, profsIds, categorie_age } = req.body;
-
+  const { jour, heure, dojoId, profsIds, categorie_age,jour_num } = req.body;
+console.log("jour_num ",jour_num)
   try {
     // 1. Créer le cours
     const cours = await Cours.create({
       jour,
       heure,
       dojoId,
+      jour_num,
       categorie_age: Array.isArray(categorie_age) ? categorie_age.join(', ') : categorie_age // stockage en texte simple
     });
 
@@ -196,7 +197,7 @@ router.post('/add_cours', async (req, res) => {
 
 
 router.put('/update_cours/:id', async (req, res) => {
-  const { jour, heure, dojoId, categorie_age, profsIds } = req.body;
+  const { jour, heure, dojoId, categorie_age,jour_num, profsIds } = req.body;
 
   try {
     // 1. Trouver le cours
@@ -210,6 +211,7 @@ router.put('/update_cours/:id', async (req, res) => {
       jour,
       heure,
       dojoId,
+      jour_num,
       categorie_age: Array.isArray(categorie_age) ? categorie_age.join(', ') : categorie_age
     });
 
